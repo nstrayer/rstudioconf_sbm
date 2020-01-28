@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Stochastic Block Models with R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nick Strayer" />
+    <meta name="date" content="2020-01-28" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Stochastic Block Models with R
+## Statistically rigorous clustering with rigorous code
+### Nick Strayer
+### Vanderbilt University
+### 2020-01-28
+
+---
+
+
+# Layout
+
+- Intro
+  - What am I selling?
+  - Why SBMs?
+  - Why write a package?
+- The Process
+  - Starting the package
+  - Tests and simulations
+  - Getting speedy with it
+  - Preparing for consumption
+- The Product
+  - What exactly is it?
+  - What is needed to use it?
+  - Demo
+  - The future...
+
+---
+class: center, middle
+
+# Intro
+
+---
+class: middle
+
+
+## What am I selling?
+
+.pull-left[
+### A Thing
+An R package to perform uncertainty-aware unsupervised clustering of graph data. 
+]
+.pull-right[
+### An Idea
+That building an R package along with your research project serves to strengthen both the package and the research. 
+]
+
+---
+class: middle
+
+# Why SBMs
+
+- Working with EHR data
+
+- Questions like "who are these people similar to and why?" were asked
+
+- Tried Deep Learning but lack of interpretability and specialization for poly-partite structure hurt it.
+
+- We needed method that acknowledges the limitations of our data. 
+
+
+---
+class: middle
+
+# Why write a package?
+
+
+Graph-Tool in Python fits SBMs but...
+- Lab uses R
+- We're focused on uncertainty
+- Wanted to tweak the underlying methods for partite networks etc. 
+	
+	
+---
+class: center, middle
+
+# The Process
+
+---
+class: middle
+
+# Getting started with the package
+
+Looking into possible graph libraries
+- iGraph is a monolith adding computationally inefficient steps in R brought it to a halt 
+- [Jim Hester's talk about dependencies](https://resources.rstudio.com/rstudio-conf-2019/it-depends-a-dialog-about-dependencies)
+	
+	
+Deciding to use Rcpp
+- Low level interface allowed stripping away of non-essentials for graph manipulation. 
+- Wanted an excuse to write in a typed and compiled language.
+
+
+---
+class: middle
+
+# Tests and simulated data catch errors
+
+
+.pull-left[
+__Software `\(\to\)` Unit Tests__
+
+- Toy examples to test basic functions 
+- Builds strong foundations
+&lt;img src = "figs/small_networks.png"/ height = "200px"&gt;
+]
+
+.pull-right[
+__Statistics `\(\to\)` Simulated Data__
+- Stochastic data _will_ find your edge cases
+&lt;img src = "figs/clustered_network.png"/ height = "250px"&gt;
+
+]
+
+
+---
+class: middle
+
+# Getting speedy with it
+
+- Initial results were... slow
+
+_Runtime figure_
+
+- Following the equations in their exact form is inefficient.
+
+- Reworking equations by hand leads to better understanding
+
+- Question the purpose of every operation, they are expensive
+
+---
+class: middle
+
+
+# Wrapping up package for public consumption
+
+- Continuously writing vignettes/docs helps keep you focused on the big picture
+
+- Once you're done, you already have written a lot
+
+- Serves as an informal sniff-test for results
+
+---
+
+class: center, middle
+
+# The Product
+
+---
+class: middle
+
+
+# What exactly is it?
+
+
+
+- A native R package
+
+- Fits SBMs
+
+- Investigates the uncertainty of found structures by sampling from bayesian posterior
+
+- Provides (a growing list of) visualizations to communicate results
+
+![](figs/sbmr_pkgdown.png)
+
+---
+class: middle
+
+# What is needed to use it?
+
+- Data that can be represented as nodes and edges between those nodes. 
+	- Patients with diagnoses
+	- Genomes with mutations
+	- Social relationships
+	- ...
+	
+- Does not (yet) support non-discrete edges
+	- Correlations between variables
+	- Distances between cities
+	- ...
+	
+- A desire to understand how stable your clusters are. 
+
+---
+class: middle
+
+# Demo of the results
+- Simulated network
+- Real world network?
+
+---
+class: middle
+
+# Future plans
+
+.pull-left[
+Node-level uncertainty 
+- Determine which values are structural outliers
+]
+	
+.pull-right[
+Lots of visualizations
+- Visualization based inference for highly complex models
+]
+
+---
+class: middle
+
+# The Appendix
+
+## Thanks to
+
+- My advisor Yaomin Xu
+- Lab Biostatistician Siwei Zheng
+- Other lab members for thoughtful comments during entire process
+
+## Me
+- Website: nickstrayer.me
+- Blog: LiveFreeOrDichotomize.com
+- Looking for Data Scientist positions for post PhD
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"slideNumberFormat": "nickstrayer.me/rstudioconf_sbm/#%current% of %total%"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

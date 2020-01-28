@@ -1,0 +1,229 @@
+---
+title: "Stochastic Block Models with R"
+subtitle: "Statistically rigorous clustering with rigorous code"
+author: "Nick Strayer"
+institute: "Vanderbilt University"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    css: ["default", "styles.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      slideNumberFormat: "nickstrayer.me/rstudioconf_sbm/#%current% of %total%"
+---
+
+# Layout
+
+- Intro
+  - What am I selling?
+  - Why SBMs?
+  - Why write a package?
+- The Process
+  - Starting the package
+  - Tests and simulations
+  - Getting speedy with it
+  - Preparing for consumption
+- The Product
+  - What exactly is it?
+  - What is needed to use it?
+  - Demo
+  - The future...
+
+---
+class: center, middle
+
+# Intro
+
+---
+class: middle
+
+
+## What am I selling?
+
+.pull-left[
+### A Thing
+An R package to perform uncertainty-aware unsupervised clustering of graph data. 
+]
+.pull-right[
+### An Idea
+That building an R package along with your research project serves to strengthen both the package and the research. 
+]
+
+---
+class: middle
+
+# Why SBMs
+
+- Working with EHR data
+
+- Questions like "who are these people similar to and why?" were asked
+
+- Tried Deep Learning but lack of interpretability and specialization for poly-partite structure hurt it.
+
+- We needed method that acknowledges the limitations of our data. 
+
+
+---
+class: middle
+
+# Why write a package?
+
+
+Graph-Tool in Python fits SBMs but...
+- Lab uses R
+- We're focused on uncertainty
+- Wanted to tweak the underlying methods for partite networks etc. 
+	
+	
+---
+class: center, middle
+
+# The Process
+
+---
+class: middle
+
+# Getting started with the package
+
+Looking into possible graph libraries
+- iGraph is a monolith adding computationally inefficient steps in R brought it to a halt 
+- [Jim Hester's talk about dependencies](https://resources.rstudio.com/rstudio-conf-2019/it-depends-a-dialog-about-dependencies)
+	
+	
+Deciding to use Rcpp
+- Low level interface allowed stripping away of non-essentials for graph manipulation. 
+- Wanted an excuse to write in a typed and compiled language.
+
+
+---
+class: middle
+
+# Tests and simulated data catch errors
+
+
+.pull-left[
+__Software $\to$ Unit Tests__
+
+- Toy examples to test basic functions 
+- Builds strong foundations
+<img src = "figs/small_networks.png"/ height = "200px">
+]
+
+.pull-right[
+__Statistics $\to$ Simulated Data__
+- Stochastic data _will_ find your edge cases
+<img src = "figs/clustered_network.png"/ height = "250px">
+
+]
+
+
+---
+class: middle
+
+# Getting speedy with it
+
+- Initial results were... slow
+
+_Runtime figure_
+
+- Following the equations in their exact form is inefficient.
+
+- Reworking equations by hand leads to better understanding
+
+- Question the purpose of every operation, they are expensive
+
+---
+class: middle
+
+
+# Wrapping up package for public consumption
+
+- Continuously writing vignettes/docs helps keep you focused on the big picture
+
+- Once you're done, you already have written a lot
+
+- Serves as an informal sniff-test for results
+
+---
+
+class: center, middle
+
+# The Product
+
+---
+class: middle
+
+
+# What exactly is it?
+
+
+
+- A native R package
+
+- Fits SBMs
+
+- Investigates the uncertainty of found structures by sampling from bayesian posterior
+
+- Provides (a growing list of) visualizations to communicate results
+
+![](figs/sbmr_pkgdown.png)
+
+---
+class: middle
+
+# What is needed to use it?
+
+- Data that can be represented as nodes and edges between those nodes. 
+	- Patients with diagnoses
+	- Genomes with mutations
+	- Social relationships
+	- ...
+	
+- Does not (yet) support non-discrete edges
+	- Correlations between variables
+	- Distances between cities
+	- ...
+	
+- A desire to understand how stable your clusters are. 
+
+---
+class: middle
+
+# Demo of the results
+- Simulated network
+- Real world network?
+
+---
+class: middle
+
+# Future plans
+
+.pull-left[
+Node-level uncertainty 
+- Determine which values are structural outliers
+]
+	
+.pull-right[
+Lots of visualizations
+- Visualization based inference for highly complex models
+]
+
+---
+class: middle
+
+# The Appendix
+
+## Thanks to
+
+- My advisor Yaomin Xu
+- Lab Biostatistician Siwei Zheng
+- Other lab members for thoughtful comments during entire process
+
+## Me
+- Website: nickstrayer.me
+- Blog: LiveFreeOrDichotomize.com
+- Looking for Data Scientist positions for post PhD
+
+

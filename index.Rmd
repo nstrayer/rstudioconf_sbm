@@ -9,32 +9,36 @@ output:
     css: ["default", "styles.css"]
     lib_dir: libs
     nature:
+      ratio: 16:9
       highlightStyle: github
       highlightLines: true
+      beforeInit: "macros.js"
       slideNumberFormat: "nickstrayer.me/rstudioconf_sbm/#%current% of %total%"
 ---
+class: middle
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  fig.dim=c(5, 4), 
+  fig.retina=2, 
+  out.width="100%",
+  message=FALSE,
+  warning=FALSE,
+  cache = TRUE
+  )
+
+library(knitr)
+set.seed(42)
+```
 
 # Layout
 
-- Intro
-  - What am I selling?
-  - Why SBMs?
-  - Why write a package?
+- What am I selling?
+- Why SBMs?
+- Why write a package?
 - The Process
-  - Starting the package
-  - Tests and simulations
-  - Getting speedy with it
-  - Preparing for consumption
 - The Product
-  - What exactly is it?
-  - What is needed to use it?
-  - Demo
-  - The future...
 
----
-class: center, middle
-
-# Intro
 
 ---
 class: middle
@@ -49,7 +53,7 @@ class: middle
 .iconed[📦]
 ]
 
-An R package to perform uncertainty-aware unsupervised clustering of graph data. 
+`sbmR`: an R package to perform uncertainty-aware unsupervised clustering of graph data. 
 ]
 .pull-right[
 ### An Idea 
@@ -58,36 +62,65 @@ An R package to perform uncertainty-aware unsupervised clustering of graph data.
 .iconed[💭]
 ]
 
-That building an R package along with your research project serves to strengthen both the package and the research. 
+Building an R package alongside a research project serves to strengthen both the package and the research. 
 ]
+
+---
+
+# Jargon Break!
+
+---
+
+# Bi or Poly-partite networks
+
+> Networks that have nodes of multiple distinct types where connections can't form between nodes of the same type. 
+
+![:centerPic 60](figs/bipartite_network.svg)
 
 ---
 
 # The __S__tochastic __B__lock __M__odel?
 
+A network model to cluster nodes into "blocks". 
 
-![](figs/sbm_explained.svg)
+![:centerPic 62](figs/sbm_explained.svg)
+
 
 ---
 
 
 # An equation for validity
 
+![:centerPic 75](figs/sbm_formula.svg)
 
-![](figs/sbm_formula.svg)
+
+---
+
+# Really why I showed an equation
+
+![:centerPic 32](figs/poisson_tattoo.png)
+
 
 ---
 class: middle
 
+
 # Why SBMs
 
-- Working with EHR data
+.pull-left[
+- Working with Electronic Health Records (EHR) data
 
-- Questions like "who are these people similar to and why?" were asked
+- Questions arise like "who are these people similar to and why?"
 
-- Tried Deep Learning but lack of interpretability and specialization for poly-partite structure hurt it.
+- Tried Deep Learning
+  - Lack of interpretability
+  - Needed specialization for bipartite networks
 
-- We needed method that acknowledges the limitations of our data. 
+- Needed method that acknowledges the limitations of the data. 
+]
+.pull-right[
+![:centerPic 100](figs/why_block_models.png)
+]
 
 
 ---
@@ -95,15 +128,22 @@ class: middle
 
 # Why write a package?
 
-
+.pull-left[
 Graph-Tool in Python fits SBMs but...
 - Lab uses R
 - We're focused on uncertainty
-- Wanted to tweak the underlying methods for partite networks etc. 
+- Needed to tweak underlying methods for bipartite networks etc. 
+- Wanted to present at RStudio::conf
+
+]
+.pull-right[
+.center[.iconed[📦]]
+]
+
 	
 	
 ---
-class: center, middle
+class: middle
 
 # The Process
 
@@ -112,14 +152,30 @@ class: middle
 
 # Getting started with the package
 
-Looking into possible graph libraries
-- iGraph is a monolith adding computationally inefficient steps in R brought it to a halt 
-- [Jim Hester's talk about dependencies](https://resources.rstudio.com/rstudio-conf-2019/it-depends-a-dialog-about-dependencies)
+.pull-left[
+  __Looking into possible graph libraries__
+
+  - iGraph is a monolith
+    - Adding computationally heavy steps in R brought it to a halt 
+ 
+- [Jim Hester's it_depends talk](https://resources.rstudio.com/rstudio-conf-2019/it-depends-a-dialog-about-dependencies)
+  
+  
+  ![:centerPic 75](figs/igraph_logo.png)
+]
 	
+.pull-right[
+  __Deciding to use Rcpp__
+
+  - Low-level interface allowed stripping away of non-essentials for graph manipulation. 
+  - Wanted an excuse to write in a typed and compiled language.
+  
+
+![:space 5]
+
+![:centerPic 35](figs/rcpp_hex.png)
+]
 	
-Deciding to use Rcpp
-- Low level interface allowed stripping away of non-essentials for graph manipulation. 
-- Wanted an excuse to write in a typed and compiled language.
 
 
 ---
@@ -132,14 +188,22 @@ class: middle
 __Software $\to$ Unit Tests__
 
 - Toy examples to test basic functions 
-- Builds strong foundations
-<img src = "figs/small_networks.png"/ height = "200px">
+- Builds strong foundations for larger models
+- Solidifies intuition about behavior
+
+![:space 5]
+
+![:centerPic 100](figs/small_networks.png)
 ]
 
 .pull-right[
 __Statistics $\to$ Simulated Data__
 - Stochastic data _will_ find your edge cases
-<img src = "figs/clustered_network.png"/ height = "250px">
+- Gives an idea of real-world performance
+
+![:space 7]
+
+![:centerPic 100](figs/clustered_network.png)
 
 ]
 
@@ -149,90 +213,348 @@ class: middle
 
 # Getting speedy with it
 
-- Initial results were... slow
+.bullet_emoji[🗺] Following the equations in their exact form is inefficient.
 
-_Runtime figure_
 
-- Following the equations in their exact form is inefficient.
+<div class = "center", style = "margin-top:-5px; margin-bottom:-70px;">
 
-- Reworking equations by hand leads to better understanding
+<img src = "figs/entropy_inefficient.png", height = 350>
+</div>
 
-- Question the purpose of every operation, they are expensive
+
+.pull-left[
+.bullet_emoji[🛠] Reworking for efficiency leads to better understanding
+]
+.pull-right[
+.bullet_emoji[🧐] Question the purpose of every operation, they are expensive
+]
+
+
+
 
 ---
+
+# Documentation as tests
+
+.pull-left[
+
+![:spacePx 50]
+
+__Constantly updating documentation...__
+
+![:spacePx 40]
+
+
+.bullet_emoji[📷] Keeps you focused on the big picture
+
+
+![:spacePx 50]
+
+.bullet_emoji[👃] Is an informal sniff-test for results
+]
+
+.pull-right[
+![:centerPic 95](figs/weird_entropy.png)
+]
+
+
+
+---
+
+# Vignette or perish
+
+.pull-left[
+
+![:spacePx 60]
+
+__Learning resources__
+
+.bullet_emoji[🥀] If no-one knows __how__ to use your package/method no-one __will__ use it. 
+![:spacePx 80]
+
+__Covertly writing__
+
+.bullet_emoji[🖍] Once you're done, you have written a lot
+
+]
+
+
+<div class = "pull-right" style = "margin-top: -5em;">
+<img src = "figs/vignette_length.png" height = 600>
+</div>
+
+---
+
 class: middle
-
-
-# Wrapping up package for public consumption
-
-- Continuously writing vignettes/docs helps keep you focused on the big picture
-
-- Once you're done, you already have written a lot
-
-- Serves as an informal sniff-test for results
-
----
-
-class: center, middle
 
 # The Product
 
 ---
-class: middle
 
+# What exactly is `sbmR`?
 
-# What exactly is it?
+.pull-left[
 
+![:spacePx 90]
 
-
-- A native R package
+- Native R package (kinda)
 
 - Fits SBMs
 
-- Investigates the uncertainty of found structures by sampling from bayesian posterior
+- Investigates uncertainty of found structure by sampling from bayesian posterior
 
 - Provides (a growing list of) visualizations to communicate results
 
-![](figs/sbmr_pkgdown.png)
+![:spacePx 30]
+
+
+### [tbilab.github.io/sbmR/](https://tbilab.github.io/sbmR/)
+
+]
+
+.pull-right[
+.shadowed[
+![:centerPic 85](figs/sbmr_pkgdown.png)
+]
+]
+
 
 ---
 class: middle
 
 # What is needed to use it?
 
-- Data that can be represented as nodes and edges between those nodes. 
-	- Patients with diagnoses
-	- Genomes with mutations
-	- Social relationships
-	- ...
+.pull-left[
+### Data
+
+.bullet_emoji[✔️] Data that can be represented as nodes and edges between those nodes
+- Patients with diagnoses
+- Genomes with mutations
+- Social relationships
+- ...
+
+.bullet_emoji[🚫] Does not (yet) support non-discrete edges
+- Correlations between variables
+- Distances between cities
+- ...
+]
+
+
+
+.pull-right[
+
+### __Mentality__
+
+
+.bullet_emoji[🍱] Interest in __how__ and __why__ your data cluster together
+
+![:spacePx 90]
+
+.bullet_emoji[⚖️] A desire to understand how stable clusters are
+
+]
+
+
 	
-- Does not (yet) support non-discrete edges
-	- Correlations between variables
-	- Distances between cities
-	- ...
-	
-- A desire to understand how stable your clusters are. 
 
 ---
 class: middle
 
-# Demo of the results
-- Simulated network
-- Real world network?
+# A quick demo 
 
 ---
-class: middle
 
+## Simulate a network
+
+
+.left-code[
+
+Let's simulate a dense network with three blocks and 40 nodes per block.
+```{r simulated-network, eval = FALSE, messages = FALSE}
+library(magrittr)
+library(tidyverse)
+library(sbmR)
+
+k <- 3    
+n_k <- 40 
+
+network <- sim_basic_block_network(
+  n_blocks = k,     
+  n_nodes_per_block = n_k
+)
+
+visualize_network(network)
+```
+]
+
+.right-plot[
+```{r simulated-network-out, ref.label="simulated-network", echo=FALSE}
+```
+]
+
+
+---
+
+## Find optimal MCMC initialization
+
+
+.left-code[
+Next we find the optimal (closest to median of posterior) starting point for our MCMC
+```{r collapse-network, eval = FALSE, messages = FALSE}
+# Setup SBM from data
+my_sbm <- create_sbm(network)
+
+# Run agglomerative collapsing
+collapse_results <- my_sbm %>%
+  collapse_blocks(sigma = 1.01)
+
+# Visualize method used to 
+# choose best state from
+# results
+collapse_results %>% 
+  visualize_collapse_results(
+    heuristic = 'delta_ratio'
+  ) +
+  xlim(0,15) +
+  geom_vline(xintercept = k)
+```
+]
+
+.right-plot[
+
+```{r collapse-network-out, ref.label="collapse-network", echo=FALSE, warning = FALSE, fig.dim = c(5,4)}
+```
+
+]
+
+```{r, echo=FALSE}
+my_sbm <- choose_best_collapse_state(my_sbm, collapse_results, heuristic = 'delta_ratio')
+```
+
+---
+
+## Sanity check...
+
+We can join the model's state after our collapse with the true generating data's blocks to see how well the collapsing algorithm fit the data. 
+.left-code[
+
+```{r check-collapse, eval = FALSE}
+# Model state after merge
+merged_state <- my_sbm %>% 
+  get_state() %>% 
+  select(id, parent)
+
+# Join with true block info
+left_join(
+  network$nodes,
+  merged_state,
+  by = "id"
+) %>% 
+  rename(inferred = parent) %$% 
+  table(inferred, block) 
+```
+]
+
+.right-plot[
+```{r check-collapse-out, ref.label="check-collapse", echo=FALSE}
+```
+]
+
+---
+
+## Sampling from posterior
+
+
+.left-code[
+
+Run MCMC sweeps from collapse starting point to investigate the posterior structure.
+```{r mcmc-sweeps, eval = FALSE}
+sweep_results <- my_sbm %>% 
+  mcmc_sweep(num_sweeps = 25, 
+             eps = 0.25, 
+             track_pairs = TRUE)
+
+# Plot Sweep Results
+sweep_results$sweep_info %>% 
+  mutate(sweep = 1:n()) %>%
+  pivot_longer(
+    c(entropy_delta,
+      num_nodes_moved)
+  ) %>% 
+  ggplot(aes(x = sweep, 
+             y = value)) +
+  geom_line() +
+  facet_grid(name~., 
+             scales = "free_y")
+```
+]
+
+.right-plot[
+```{r mcmc-sweeps-out, ref.label="mcmc-sweeps", echo = FALSE}
+```
+
+]
+
+---
+
+## Investigating Uncertainty in clustering
+
+.left-code[
+
+Plot the pairwise probability two nodes residing in the same block
+```{r pairwise-propensity, eval = FALSE}
+
+sweep_results$pairing_counts %>% 
+  ggplot(aes(x = node_a, 
+             y = node_b)) +
+  geom_raster(
+    aes(fill = proportion_connected)
+  ) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank()
+  )
+```
+]
+
+.right-plot[
+```{r pairwise-propensity-out, ref.label="pairwise-propensity", echo = FALSE, fig.dims=c(4,4)}
+```
+
+]
+
+
+---
+
+## Concensus-SNE
+
+.left-code[
+
+Package function to visualize the pairwise node to node block similarity with a network. 
+```{r pairwise-propensity-network, eval = FALSE}
+sweep_results %>% 
+  visualize_propensity_network()
+```
+]
+
+.right-plot[
+```{r pairwise-propensity-network-out, ref.label="pairwise-propensity-network", echo = FALSE}
+```
+
+]
+
+
+---
 # Future plans
 
 .pull-left[
-Node-level uncertainty 
-- Determine which values are structural outliers
+## Node-level uncertainty 
+Determine which values are structural outliers
 ]
 	
 .pull-right[
-Lots of visualizations
-- Visualization based inference for highly complex models
+## Lots of visualizations
+Visualization based inference for highly complex models
 ]
 
 ---
@@ -240,15 +562,19 @@ class: middle
 
 # The Appendix
 
-## Thanks to
+.pull-left[
+  ## Thanks to
+  
+  - My advisor Yaomin Xu
+  - Lab Biostatistician Siwei Zheng
+  - Other lab members for thoughtful comments during entire process
+]
 
-- My advisor Yaomin Xu
-- Lab Biostatistician Siwei Zheng
-- Other lab members for thoughtful comments during entire process
-
-## Me
-- Website: nickstrayer.me
-- Blog: LiveFreeOrDichotomize.com
-- Looking for Data Scientist positions for post PhD
+.pull-right[
+## About Me
+  - Website: nickstrayer.me
+  - Blog: LiveFreeOrDichotomize.com
+  - Looking for Data Scientist positions for post PhD
+]
 
 

@@ -23,8 +23,9 @@ knitr::opts_chunk$set(
   fig.retina=2, 
   out.width="100%",
   message=FALSE,
-  warning=FALSE,
-  cache = TRUE
+  warning=FALSE
+  # ,
+  # cache = TRUE
   )
 
 library(knitr)
@@ -36,6 +37,8 @@ class: middle
 
 
 ---
+
+class: middle
 
 # Layout
 
@@ -513,7 +516,7 @@ left_join(
 Run MCMC sweeps from collapse starting point to investigate the posterior structure.
 ```{r mcmc-sweeps, eval = FALSE}
 sweep_results <- my_sbm %>% 
-  mcmc_sweep(num_sweeps = 25, 
+  mcmc_sweep(num_sweeps = 75, 
              eps = 0.25, 
              track_pairs = TRUE)
 

@@ -14,8 +14,8 @@ output:
       highlightLines: true
       beforeInit: "macros.js"
       slideNumberFormat: "nickstrayer.me/rstudioconf_sbm/#%current% of %total%"
+    seal: false
 ---
-class: middle
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -30,14 +30,44 @@ knitr::opts_chunk$set(
 library(knitr)
 set.seed(42)
 ```
+class: middle
+
+![:centerPic](figs/title_slide.png)
+
+
+---
 
 # Layout
 
+
 - What am I selling?
-- Why SBMs?
-- Why write a package?
+- The Why
 - The Process
 - The Product
+
+---
+# About Me
+
+.pull-left[
+
+## Career
+- Previously:
+  - Software Engineering w/ Javascript
+  - Worked for NY Times Graphics Department
+- Now:
+  - PhD. Candidate, Vanderbilt Biostatistics
+  - Focusing on Visualization and Unsupervized learning
+- Future:
+  - Looking for Data Science positions for post graduation
+]
+
+.pull-right[
+## Links
+- Blog at [LiveFreeOrDichotomize.com](https://livefreeordichotomize.com/)
+- Tweet at [@nicholasStrayer](https://twitter.com/NicholasStrayer)
+- Code at [github.com/nstrayer](https://github.com/nstrayer)
+
+]
 
 
 ---
@@ -67,7 +97,19 @@ Building an R package alongside a research project serves to strengthen both the
 
 ---
 
-# Jargon Break!
+
+
+class:middle
+
+# The Why
+
+
+---
+
+class: middle
+
+
+# But first... Jargon Break!
 
 ---
 
@@ -91,8 +133,9 @@ A network model to cluster nodes into "blocks".
 
 # An equation for validity
 
-![:centerPic 75](figs/sbm_formula.svg)
-
+<div style="margin-top:-75px;">
+![:centerPic 85](figs/sbm_formula.svg)
+</div>
 
 ---
 
@@ -150,7 +193,7 @@ class: middle
 ---
 class: middle
 
-# Getting started with the package
+# Getting to the starting line
 
 .pull-left[
   __Looking into possible graph libraries__
@@ -558,23 +601,22 @@ Visualization based inference for highly complex models
 ]
 
 ---
-class: middle
 
 # The Appendix
 
+## Thanks to
 .pull-left[
-  ## Thanks to
-  
-  - My advisor Yaomin Xu
-  - Lab Biostatistician Siwei Zheng
-  - Other lab members for thoughtful comments during entire process
+- My advisor Yaomin Xu
+- Lab Biostatistician Siwei Zheng
+- Other lab members for thoughtful comments during entire process
+- Vanderbilt Biostatistics Development Grant
+- My Cat (and wife)
 ]
 
 .pull-right[
-## About Me
-  - Website: nickstrayer.me
-  - Blog: LiveFreeOrDichotomize.com
-  - Looking for Data Scientist positions for post PhD
+![:centerPic 70](figs/thanks_photo.png)
 ]
+
+
 
 
